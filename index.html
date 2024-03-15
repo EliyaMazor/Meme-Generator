@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="style/main.css" />
     <title>Meme Generator</title>
   </head>
-  <body>
-    <header>
+
+  <body onload="onInit()">
+    <header class="main-header">
       <h1 class="logo">Meme Generator</h1>
       <nav>
         <ul>
@@ -23,15 +24,44 @@
     </header>
 
     <section class="main-container">
-        <div class="editor-container"></div>
-        <div class="gallery-container"></div>
-
+      <div class="editor-container">
+        <canvas width="400" height="400"></canvas>
+        <input
+          oninput="onDrawText(this.value)"
+          class="meme-text"
+          type="text"
+          placeholder="Add text here"
+        />
+      </div>
+      <div class="gallery-container">
+        <article class="img-card">
+          <img src="img/1.jpg" alt="" />
+        </article>
+        <article class="img-card">
+          <img src="img/1.jpg" alt="" />
+        </article>
+        <article class="img-card">
+          <img src="img/1.jpg" alt="" />
+        </article>
+        <article class="img-card">
+          <img src="img/1.jpg" alt="" />
+        </article>
+        <article class="img-card">
+          <img src="img/1.jpg" alt="" />
+        </article>
+        <article class="img-card">
+          <img src="img/1.jpg" alt="" />
+        </article>
+        <article class="img-card">
+          <img src="img/1.jpg" alt="" />
+        </article>
+      </div>
     </section>
 
-    <footer>copy rights</footer>
+    <footer class="main-footer">copy rights</footer>
 
     <script src="js/services/util.service.js"></script>
-    <script src="js/services/home.service.js"></script>
-    <script src="js/home.controller.js"></script>
+    <script src="js/services/meme.service.js"></script>
+    <script src="js/meme.controller.js"></script>
   </body>
 </html>
