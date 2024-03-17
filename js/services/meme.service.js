@@ -6,6 +6,8 @@ const gMeme = {
   selectedLineIdx: 0,
   lines: [
     {
+      x: 50,
+      y: 50,
       txt: '',
       size: 20,
       color: 'red',
@@ -13,3 +15,11 @@ const gMeme = {
   ],
 }
 const gKeywordSearchCountMap = { funny: 12, cat: 16, baby: 2 }
+
+function getMeme(id){
+    return gImgs.find(img => (id === img.id))
+}
+
+function setLineTxt(txt) {
+    gMeme.lines[0].txt = txt
+}

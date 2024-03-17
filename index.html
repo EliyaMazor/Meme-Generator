@@ -25,12 +25,15 @@
 
     <section class="main-container">
       <div class="editor-container">
-        <canvas width="400" height="400"></canvas>
+        <label for="text">
+          <canvas width="400" height="400"></canvas>
+        </label>
         <input
           oninput="onDrawText(this.value)"
           class="meme-text"
           type="text"
           placeholder="Add text here"
+          id="text"
         />
       </div>
       <div class="gallery-container">
@@ -62,6 +65,7 @@
 
     <script src="js/services/util.service.js"></script>
     <script src="js/services/meme.service.js"></script>
+    <script src="js/gallery.controller.js"></script>
     <script src="js/meme.controller.js"></script>
   </body>
 </html>

@@ -10,30 +10,33 @@ function onInit() {
 }
 
 function renderMeme() {
-    const elImg = document.querySelector('img')
-    gElCanvas.height = (elImg.naturalHeight / elImg.naturalWidth) * gElCanvas.width
-    gCtx.drawImage(elImg, 0, 0, gElCanvas.width, gElCanvas.height)
+    const img = new Image()
+    const meme = getMeme(gMeme.selectedImgId)
+
+    img.src = meme.url
+    renderImg(img)
 }
 
 function renderImg(img) {
-    // Adjust the canvas to the new image size
-
+    gElCanvas.height = (img.naturalHeight / img.naturalWidth) * gElCanvas.width
+    gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
 }
 
 function onDrawText(txt){
-    drawText(txt)
+    setLineTxt(txt) 
+    renderMeme()
+    drawText()
 }
 
-function drawText(txt, x, y) {//needs a coordinate 
-	gCtx.lineWidth = 2
+function drawText() {
+    
+    // gCtx.beginPath()
+	gCtx.lineWidth = 5
 	gCtx.strokeStyle = 'orange'
-
 	gCtx.fillStyle = 'white'
 
 	gCtx.font = '45px Arial'
-	gCtx.textAlign = 'center'
-	gCtx.textBaseline = 'middle'
+	gCtx.fillText(gMeme.lines[0].txt, gMeme.lines[0].x, gMeme.lines[0].y)
+    // gCtx.closePath()
 
-	gCtx.fillText(txt, x, y)
-	gCtx.strokeText(txt, x, y)
 }
