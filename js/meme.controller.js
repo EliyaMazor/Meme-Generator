@@ -9,6 +9,12 @@ function onInit() {
   renderMeme()
 }
 
+function onSelectImg(id){
+    gMeme.selectedImgId = id
+    renderMeme()
+
+}
+
 function renderMeme() {
     const img = new Image()
     const meme = getMeme(gMeme.selectedImgId)
