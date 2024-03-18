@@ -1,5 +1,9 @@
 'use script'
 
+
+const CURR_MEME_KEY = 'currMemeDB'
+const SAVED_MEME_KEY = 'savedMemeDB'
+const gKeywordSearchCountMap = { funny: 12, cat: 16, baby: 2 }
 const gImgs = [
   { id: 1, url: 'img/1.jpg', keywords: ['funny', 'politic'] },
   { id: 2, url: 'img/2.jpg', keywords: ['cute', 'dog'] },
@@ -20,25 +24,36 @@ const gImgs = [
   { id: 17, url: 'img/17.jpg', keywords: ['funny', 'politic'] },
   { id: 18, url: 'img/18.jpg', keywords: ['movie', 'funny', 'toy story'] },
 ]
-const gMeme = {
-  selectedImgId: 1,
-  selectedLineIdx: 0,
-  lines: [
-    {
-      x: 50,
-      y: 50,
-      txt: '',
-      size: 20,
-      color: 'red',
-    },
-  ],
-}
-const gKeywordSearchCountMap = { funny: 12, cat: 16, baby: 2 }
+var gMeme 
+//= {
+//   selectedImgId: null,
+//   selectedLineIdx: 0,
+//   lines: [
+//     {
+//       x: 50,
+//       y: 50,
+//       txt: '',
+//       size: 20,
+//       color: 'red',
+//     },
+//   ],
+// }
 
-function getMeme(id) {
-  return gImgs.find((img) => id === img.id)
+function findImgById(id){
+    return gImgs.find((img) => id === img.id)
 }
 
 function setLineTxt(txt) {
-  gMeme.lines[0].txt = txt
+    gMeme.lines[gMeme.selectedLineIdx].txt = txt
+    console.log(gMeme);
+}
+
+function getMeme(key) {
+  const gMeme = loadFromStorage(key)
+  return gMeme
+}
+
+function saveMeme(key, meme){
+    saveToStorage(key, meme)
+    if(key === SAVED_MEME_KEY) clearStorage()
 }

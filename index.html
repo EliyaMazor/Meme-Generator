@@ -24,45 +24,33 @@
     </header>
 
     <section class="main-container">
-      <div class="editor-container">
-        <label for="text">
-          <canvas width="400" height="400"></canvas>
-        </label>
-        <input
-          oninput="onDrawText(this.value)"
-          class="meme-text"
-          type="text"
-          placeholder="Add text here"
-          id="text"
-        />
-      </div>
-      <div class="gallery-container">
-      
-        <article class="img-card">
-          <img src="img/1.jpg" alt="" />
-        </article>
-        <article class="img-card">
-          <img src="img/1.jpg" alt="" />
-        </article>
-        <article class="img-card">
-          <img src="img/1.jpg" alt="" />
-        </article>
-        <article class="img-card">
-          <img src="img/1.jpg" alt="" />
-        </article>
-        <article class="img-card">
-          <img src="img/1.jpg" alt="" />
-        </article>
-        <article class="img-card">
-          <img src="img/1.jpg" alt="" />
-        </article>
-      </div>
+        <div class="editor-container">
+          <label for="text">
+            <canvas width="400" height="400"></canvas>
+          </label>
+          <input
+            oninput="onDrawText(this.value)"
+            class="meme-text"
+            type="text"
+            placeholder="Add text here"
+            id="text"
+          />
+        </div>
+
+        <div class="actions">
+          <button onclick="onAddLine()">+</button>
+          <button onclick="onSave()">Save</button>
+          <button onclick="onClearCanvas()">Clear</button>
+        </div>
+        <div class="gallery-container"></div>
     </section>
 
     <footer class="main-footer">copy rights</footer>
 
     <script src="js/services/util.service.js"></script>
+    <script src="js/services/storage.service.js"></script>
     <script src="js/services/meme.service.js"></script>
+    <script src="js/services/gallery.service.js"></script>
     <script src="js/gallery.controller.js"></script>
     <script src="js/meme.controller.js"></script>
   </body>
