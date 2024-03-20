@@ -36,6 +36,7 @@ function renderFromStorage() {
 }
 
 function onSelectImg(id) {
+  document.querySelector('.meme-text').value = ''
   gMeme = {}
   gMeme.selectedImgId = id
   gMeme.selectedLineIdx = 0
@@ -127,11 +128,17 @@ function addTouchListeners() {
 
 function onDown(ev) {
   gMousePos = getEvPos(ev)
+  if(!gMeme.lines) return
 
   const line = txtClicked()
   if(!line) return
 
+  // gMeme.selectedLineIdx = gMeme.findIndex((l, idx) => {
+  //   return()
+  // })
+
   setTextDrag(line)
+  document.querySelector('.meme-text').value = line.txt
   document.body.style.cursor = 'grabbing'
 }
 
@@ -156,10 +163,14 @@ function onMove(ev) {
 }
 
 function onUp() {
-  const line = txtClicked()
-  if(!line) return
-  setTextDrag(line)
+  // const line = txtClicked()
+  // if(!line) return
+  // setTextDrag(line)
+  console.log('here');
+  gMeme.lines.forEach(line => line.isDrag = false)
   document.body.style.cursor = 'grab'
+  renderMeme()
+  drawText()
 }
 
 // function resizeCanvas() {
@@ -193,9 +204,11 @@ function getEvPos(ev) {
 }
 
 function txtClicked() {
-  const line = gMeme.lines.find((line) => {
+  if(!gMeme.lines) return
+  var idx
+  const line = gMeme.lines.find((line, i) => {
     var { x, y, fontSize, length = line.txt.length * line.fontSize } = line
-
+    idx = i
     return (
       gMousePos.x >= x &&
       gMousePos.x <= length &&
@@ -205,7 +218,8 @@ function txtClicked() {
   })
 
   if (!line) return null
-  else return line
+  console.log(idx);
+  return line
 }
 
 function setTextDrag(line) {
