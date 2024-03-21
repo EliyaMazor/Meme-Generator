@@ -21,8 +21,12 @@ a {
 
 .main-container {
   background-color: lightgreen;
-  display: flex;
-  flex-wrap: wrap;
+  /* display: flex;
+  flex-wrap: wrap; */
+}
+
+dialog{
+  padding: 0;
 }
 
 canvas {

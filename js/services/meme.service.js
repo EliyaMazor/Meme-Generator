@@ -44,8 +44,8 @@ function findImgById(id){
 }
 
 function setLineTxt(txt) {
+  console.log(gMeme.selectedLineIdx);
     gMeme.lines[gMeme.selectedLineIdx].txt = txt
-    console.log(gMeme);
 }
 
 function getMeme(key) {

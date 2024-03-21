@@ -23,27 +23,43 @@
       </nav>
     </header>
 
-    <section class="main-container">
-        <div class="editor-container">
-          <label for="text">
-            <canvas width="400" height="400"></canvas>
-          </label>
-          <input
-            oninput="onDrawText(this.value)"
-            class="meme-text"
-            type="text"
-            placeholder="Add text here"
-            id="text"
-          />
-        </div>
+    <dialog class="main-container">
+      <div class="editor-container">
+        <canvas width="400" height="400"></canvas>
+      </div>
 
-        <div class="actions">
-          <button onclick="onAddLine()">+</button>
-          <button onclick="onSave()">Save</button>
-          <button onclick="onClearCanvas()">Clear</button>
-        </div>
-        <div class="gallery-container"></div>
-    </section>
+      <div class="actions">
+        <input
+          oninput="onDrawText(this.value)"
+          class="meme-text"
+          type="text"
+          placeholder="Add text here"
+          id="text"
+        />
+        <button onclick="onAddLine()">+</button>
+        <button onclick="onSave()">save</button>
+        <button onclick="onClearMeme()">clear</button>
+        <button onclick="onChangeTextSize(4)">a +</button>
+        <button onclick="onChangeTextSize(-4)">a -</button>
+        <button onclick="onChangeSelectedLine()">line</button>
+        <input
+          class="stroke-color"
+          type="color"
+          oninput="onChangeColor('strokeStyle', this.value)"
+          value="#ffffff"
+        />
+        <input
+          class="fill-color"
+          type="color"
+          oninput="onChangeColor('fillStyle', this.value)"
+          value="#000000"
+        />
+      </div>
+
+      <button onclick="onCloseModal()">X</button>
+    </dialog>
+
+    <div class="gallery-container"></div>
 
     <footer class="main-footer">copy rights</footer>
 
