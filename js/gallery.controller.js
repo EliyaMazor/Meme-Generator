@@ -13,5 +13,5 @@ function renderGallery() {
 
 function getImgs() {
   if (gImgs === undefined) gImgs = _createImgs()
-    return gImgs
+  return gImgs
 }

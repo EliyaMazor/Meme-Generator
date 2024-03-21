@@ -11,8 +11,6 @@ function onInit() {
   gCtx = gElCanvas.getContext('2d')
   gMeme = getMeme(CURR_MEME_KEY)
 
-  // resizeCanvas()
-
   renderGallery()
 
   if (gMeme) renderFromStorage()
@@ -27,10 +25,10 @@ function renderFromStorage() {
   img.src = meme.url
 
   renderMeme()
-  //openModal()
   img.onload = () => {
     gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
     drawText()
+    document.querySelector('dialog').showModal()
   }
 }
 
@@ -61,7 +59,6 @@ function renderImg() {
 }
 
 function onDrawText(txt) {
-  console.log(gMeme);
   setLineTxt(txt)
   // removeBorderFromText()
   // addBorderToEditText()
@@ -71,13 +68,9 @@ function onDrawText(txt) {
 }
 
 function drawText() {
-  gMeme.lines.forEach((line, idx) => {
+  gMeme.lines.forEach((line) => {
     gCtx.beginPath()
 
-    if (idx === gMeme.selectedLineIdx) addBorderToEditText()
-    else removeBorderFromText()
-
-    // gCtx.fontFamily = 'Arial'
     gCtx.font = `${line.txtSize}px ${line.fontFamily}`
     gCtx.lineWidth = line.lineWidth
 
@@ -89,11 +82,10 @@ function drawText() {
     gCtx.fillText(line.txt, line.x, line.y)
     gCtx.closePath()
   })
+  addBorderToEditText()
 }
 
 function onAddLine() {
-  console.log(gMeme)
-
   let { lines } = gMeme
   if (!lines[lines.length - 1].txt) return
 
@@ -123,22 +115,27 @@ function addLine() {
 }
 
 function addBorderToEditText() {
-  const { x, y, txt, fontSize } = gMeme.lines[gMeme.selectedLineIdx]
+  const { x, y, txt, txtSize } = gMeme.lines[gMeme.selectedLineIdx]
   const { width } = gCtx.measureText(txt)
+  const size = +txtSize
   gCtx.strokeStyle = 'black'
 
-  gCtx.strokeRect(x, y + 0.3 * fontSize, width, -(fontSize + 0.3 * fontSize))
+  gCtx.strokeRect(x, y + 0.3 * size, width, -(size + 0.3 * size))
 }
 
 function removeBorderFromText() {
-  const { x, y, txt, fontSize } = gMeme.lines[gMeme.selectedLineIdx]
+  const { x, y, txt, txtSize } = gMeme.lines[gMeme.selectedLineIdx]
   const { width } = gCtx.measureText(txt)
+  const size = +txtSize
   gCtx.strokeStyle = ''
 
-  gCtx.strokeRect(x, y + 0.3 * fontSize, width, -(fontSize + 0.3 * fontSize))
+  gCtx.strokeRect(x, y + 0.3 * size, width, -(size + 0.3 * size))
 }
 
 function onSave() {
+  removeBorderFromText()
+  renderMeme()
+  drawText()
   saveMeme(SAVED_MEME_KEY, gMeme)
 }
 
@@ -171,75 +168,40 @@ function addTouchListeners() {
 
 function onDown(ev) {
   gStartPos = getEvPos(ev)
-  // if (!gMeme.lines) {
-  //   // there is a line {initial} without txt!!!
-  //   ev.preventDefault()
-  //   return
-  // }
-  const line = txtClicked()
-  if (!line) return
 
-  // gMeme.selectedLineIdx = gMeme.findIndex((l, idx) => {
-  //   return()
-  // })
+  if (!isTxtClicked()) return
+  const line = gMeme.lines[gMeme.selectedLineIdx]
+  setTextDrag(line, true)
+
   document.querySelector('.meme-text').value = line.txt
   document.querySelector('.meme-text').focus()
-  document.querySelector('.stroke-color').value = gMeme.lines[gMeme.selectedLineIdx].strokeStyle
-  document.querySelector('.fill-color').value = gMeme.lines[gMeme.selectedLineIdx].fillStyle
+  document.querySelector('.stroke-color').value =
+    gMeme.lines[gMeme.selectedLineIdx].strokeStyle
+  document.querySelector('.fill-color').value =
+    gMeme.lines[gMeme.selectedLineIdx].fillStyle
   document.querySelector('.editor-container canvas').style.cursor = 'grabbing'
-  // setTextDrag(line)
 }
 
 function onMove(ev) {
-  // if (!gMeme) {
-  //   ev.preventDefault()
-  //   return
-  // }
-  const line = gMeme.lines.find((line) => {
-    var { isDrag } = line
-    return isDrag
-  })
+  const line = gMeme.lines.find((line) => line.isDrag === true)
   if (!line) return
-  console.log('Hi');
+
   const pos = getEvPos(ev)
 
   const dx = pos.x - gStartPos.x
   const dy = pos.y - gStartPos.y
-  // console.log('dx', dx, 'dy', dy, 'pos.x', pos.x, 'pos.y', pos.y, 'gMousePos.x', gMousePos.x, 'gMousePos.y', gMousePos.y);
 
-  moveLine(line, dx, dy)
+  moveLine(dx, dy)
 
   gStartPos = pos
   renderMeme()
   drawText()
 }
-// function onMove(ev) {
-//   const { isDrag } = getCircle()
-//   if (!isDrag) return
-
-//   const pos = getEvPos(ev)
-
-//   // Calc the delta, the diff we moved
-//   const dx = pos.x - gStartPos.x
-//   const dy = pos.y - gStartPos.y
-
-//   moveCircle(dx, dy)
-
-//   // Save the last pos, we remember where we`ve been and move accordingly
-//   gStartPos = pos
-
-//   // The canvas is rendered again after every move
-//   renderCanvas()
-// }
 
 function onUp() {
-  // const line = txtClicked()
-  // if(!line) return
-  // setTextDrag(line)
-  gMeme.lines.forEach((line) => (line.isDrag = false))
+  const line = gMeme.lines[gMeme.selectedLineIdx]
+  setTextDrag(line, false)
   document.querySelector('.editor-container canvas').style.cursor = 'grab'
-  // renderMeme()
-  // drawText()
 }
 
 // function resizeCanvas() {
@@ -250,10 +212,6 @@ function onUp() {
 // }
 
 function getEvPos(ev) {
-  console.log(
-    ev.pageX - ev.target.offsetLeft - ev.target.clientLeft,
-    ev.pageY - ev.target.offsetTop - ev.target.clientTop
-  )
   if (TOUCH_EVENTS.includes(ev.type)) {
     ev.preventDefault() // Prevent triggering the mouse events
     ev = ev.changedTouches[0] // Gets the first touch point
@@ -275,9 +233,7 @@ function getEvPos(ev) {
   }
 }
 
-function txtClicked() {
-  // if (!gMeme.lines) return
-
+function isTxtClicked() {
   var idx
   const line = gMeme.lines.find((line, i) => {
     var { x, y, txt } = line
@@ -292,19 +248,18 @@ function txtClicked() {
     )
   })
 
-  if (!line) return null
+  if (!line) return false
 
   gMeme.selectedLineIdx = idx
-  setTextDrag(line, true)
-  return line
+  return true
 }
 
 function setTextDrag(line, isDrag) {
   line.isDrag = isDrag
 }
 
-function moveLine(line, dx, dy) {
-  console.log(line, dx, dy)
+function moveLine(dx, dy) {
+  const line = gMeme.lines[gMeme.selectedLineIdx]
   line.x += dx
   line.y += dy
   saveMeme(CURR_MEME_KEY, gMeme)
@@ -325,7 +280,8 @@ function changeTextSize(dir) {
   if (
     (+gMeme.lines[idx].txtSize >= 200 && dir === 4) ||
     (+gMeme.lines[idx].txtSize <= 22 && dir === -4)
-  )return
+  )
+    return
   let size = +gMeme.lines[idx].txtSize
   size += dir
   gMeme.lines[idx].txtSize = size.toString()
@@ -343,17 +299,21 @@ function changeColor(prop, clr) {
   gMeme.lines[idx][prop] = clr
 }
 
-function onChangeSelectedLine(){
+function onChangeSelectedLine() {
   changeSelectedLine()
   renderMeme()
   drawText()
-  document.querySelector('.meme-text').value = gMeme.lines[gMeme.selectedLineIdx].txt
+
+  document.querySelector('.meme-text').value =
+    gMeme.lines[gMeme.selectedLineIdx].txt
   document.querySelector('.meme-text').focus()
-  document.querySelector('.stroke-color').value = gMeme.lines[gMeme.selectedLineIdx].strokeStyle
-  document.querySelector('.fill-color').value = gMeme.lines[gMeme.selectedLineIdx].fillStyle
+  document.querySelector('.stroke-color').value =
+    gMeme.lines[gMeme.selectedLineIdx].strokeStyle
+  document.querySelector('.fill-color').value =
+    gMeme.lines[gMeme.selectedLineIdx].fillStyle
 }
 
-function changeSelectedLine(){
+function changeSelectedLine() {
   gMeme.selectedLineIdx++
-  if(gMeme.selectedLineIdx === gMeme.lines.length) gMeme.selectedLineIdx = 0
+  if (gMeme.selectedLineIdx === gMeme.lines.length) gMeme.selectedLineIdx = 0
 }

@@ -1,6 +1,5 @@
 'use script'
 
-
 const CURR_MEME_KEY = 'currMemeDB'
 const SAVED_MEME_KEY = 'savedMemeDB'
 const gKeywordSearchCountMap = { funny: 12, cat: 16, baby: 2 }
@@ -25,26 +24,13 @@ const gImgs = [
   { id: 18, url: 'img/18.jpg', keywords: ['movie', 'funny', 'toy story'] },
 ]
 var gMeme 
-//= {
-//   selectedImgId: null,
-//   selectedLineIdx: 0,
-//   lines: [
-//     {
-//       x: 50,
-//       y: 50,
-//       txt: '',
-//       size: 20,
-//       color: 'red',
-//     },
-//   ],
-// }
+
 
 function findImgById(id){
     return gImgs.find((img) => id === img.id)
 }
 
 function setLineTxt(txt) {
-  console.log(gMeme.selectedLineIdx);
     gMeme.lines[gMeme.selectedLineIdx].txt = txt
 }
 
